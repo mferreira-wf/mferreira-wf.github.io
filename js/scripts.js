@@ -62,7 +62,7 @@ function makeGeneratorCol(id) {
     let container = $('#' + id);
     let nid = id.match(/\d+/)[0];
 
-    let gencolname = $('<div class="col-xl-2 h3 text-danger text-weight-bold border">Generator ' + nid + ':</div>');
+    let gencolname = $('<div class="col-xl-2 h3 text-danger text-weight-bold border"></div>');
     let gencolqty = $('<div class="col-xl-2 border"></div>');
     let genqty = $('<div class="text-danger text-weight-bold h4" id="ngen' + nid + '">0</div>');
     let geneff = $('<div class="h6 text-light">(Eff:<span id="ngeneff' + nid + '">0</span>%)</div>');
