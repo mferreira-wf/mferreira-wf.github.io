@@ -52,7 +52,7 @@ function updateGenBtnCost(mult) {
 function makeGeneratorRow(nrows, id) {
     let container = $('#' + id);
     for (let i = 0; i < nrows; i++) {
-        let newrow = $('<div class="row m-4 border border-2 border-danger" id="ngenrow' + (i + 1) + '"></div>');   
+        let newrow = $('<div class="row m-4 border border-3 border-danger" id="ngenrow' + (i + 1) + '"></div>');   
         container.append(newrow);
         makeGeneratorCol('ngenrow' + (i + 1));
     }
@@ -62,12 +62,12 @@ function makeGeneratorCol(id) {
     let container = $('#' + id);
     let nid = id.match(/\d+/)[0];
 
-    let gencolname = $('<div class="col-xl-2 h3 text-danger text-weight-bold border"></div>');
-    let gencolqty = $('<div class="col-xl-2 border"></div>');
+    let gencolname = $('<div class="col-xl-2 my-4 h3 text-danger text-weight-bold"></div>');
+    let gencolqty = $('<div class="col-xl-2 my-3"></div>');
     let genqty = $('<div class="text-danger text-weight-bold h4" id="ngen' + nid + '">0</div>');
     let geneff = $('<div class="h6 text-light">(Eff:<span id="ngeneff' + nid + '">0</span>%)</div>');
-    let gencolprogbar = $('<div class="col-xl-6 border" id="ngenprogbar' + nid + '"></div>');
-    let gencolbutton = $('<div class="col-xl-2 border"></div>');
+    let gencolprogbar = $('<div class="col-xl-6" id="ngenprogbar' + nid + '"></div>');
+    let gencolbutton = $('<div class="col-xl-2 my-2"></div>');
     let genbuttonpos = $('<div class="d-flex justify-content-end"></div>');
     let genbutton = $('<button class="btn btn-main btn-gen border border-3 border-danger" style="font-size:20px; width:170px" basecost="' + Math.pow(10,nid)  + '"></button>');
     let genbuttonqty = $('<span id="ngenqtybuy' + nid + '">+1</span><br>');
