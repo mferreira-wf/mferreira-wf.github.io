@@ -20,24 +20,138 @@
     </head>
 
     <body>
-        <header>
-            <!-- place navbar here -->
-        </header>
-        <main></main>
-        <footer>
-            <!-- place footer here -->
-        </footer>
-        <!-- Bootstrap JavaScript Libraries -->
+        <script 
+            src="js/jquery-3.7.1.min.js"
+        ></script>
         <script
             src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.8/dist/umd/popper.min.js"
             integrity="sha384-I7E8VVD/ismYTF4hNIPjVp/Zjvgyol6VFvRkX/vR+Vc4jQkC+hVqc2pM8ODewa9r"
             crossorigin="anonymous"
         ></script>
-
         <script
             src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.min.js"
             integrity="sha384-BBtl+eGJRgqQAUMxJ7pMwbEyER4l1g+O15P+16Ep7Q9Q+zqX6gSbd85u4mG4QzX+"
             crossorigin="anonymous"
         ></script>
+        <div class="container-fluid" id="game">                        
+            <div class="row m-2">
+                <div class="col-xl-2 main-left my-2 border border-3 border-danger" id="mainmenu">
+                    <div class="row my-4 justify-content-center align-items-center h2 text-danger">Menu</div>
+                    <div class="container" id="menubuttons">
+                        <div class="row m-2 justify-content-center align-items-center h4">
+                            <div class="btn btn-main selected h4 rounded border border-danger border-3"
+                            style="width: 200px">Number</div>
+                        </div>
+                        <div class="row m-2 justify-content-center align-items-center h4">
+                            <div class="btn btn-main h4 rounded border border-danger border-3" style="width: 200px">Upgrades</div>
+                        </div>
+                        <div class="row m-2 justify-content-center align-items-center h4">
+                            <div class="btn btn-main h4 rounded border border-danger border-3" style="width: 200px">Prestige</div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-xl main-right my-2 border border-3 border-danger" id="mainbody">
+                    <div class="row justify-content-center align-items-center h1 border border-3 border-top-0 border-start-0 border-end-0 border-danger" id="thenumber">x</div>
+                    <div class="row menu-content" id="m0">
+                        <div class="container">
+                            <div class="row m-2 h3 justify-content-center align-items-center text-danger">Upgrade Speed</div>
+                            <div class="row m-2 justify-content-center align-items-center">
+                                <div class="col-auto">
+                                    <button class="btn btn-main rounded border border-danger border-3" id="tick"
+                                    >Cost: <span id="tickcost">X</span></button>
+                                </div>
+                            </div>                            
+                        </div>
+                        <div class="container" id="multiselect">
+                            <div class="row justify-content-end align-content-center">
+                                <div class="col-auto m-2">
+                                    <button class="btn btn-main selected rounded border border-danger border-3" value="1">x1</button>
+                                    <button class="btn btn-main rounded border border-danger border-3" value="10">x10</button>
+                                    <button class="btn btn-main rounded border border-danger border-3" value="100">x100</button>
+                                    <button class="btn btn-main rounded border border-danger border-3" value="-1">MAX</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row menu-content" id="m1" style="display:none">b
+
+                    </div>
+                    <div class="row menu-content" id="m2" style="display:none">c
+
+                    </div>
+                </div>
+                
+            </div>
+
+
+
+
+
+        </div>
+        <script>
+            let lastTime = null;
+            let totalTime = 0;
+
+            setInterval(function gameLoop() {
+                const currentTime = Date.now();
+                if (lastTime === null) {
+                    lastTime = currentTime;
+                }
+                const deltaTime = currentTime - lastTime;
+                totalTime += deltaTime;
+                lastTime = currentTime;
+                updateMyGame(deltaTime, totalTime);
+            } , 1000 / 60);           
+
+            function handleMenuButtonClick() {
+                var index = $('#menubuttons .btn-main').index(this);
+
+                $('#menubuttons .btn-main').removeClass('selected');                
+                $(this).addClass('selected');
+                $('.menu-content').hide(); 
+                $('#m' + (index)).show(); 
+            }
+
+            function handleMultiButtonClick(){ 
+                $('#multiselect .btn-main').removeClass('selected');
+                $(this).addClass('selected');
+                multiSelect = parseFloat($(this).val());                
+            }
+
+            function updateTheNumber() {
+                $('#thenumber').text(theNumber);
+            }
+
+            function updateTickCost(){
+                $('#tickcost').text(100*Math.pow(10,tick-1));
+                if (theNumber < 100*Math.pow(10,tick-1)) {
+                    $('#tick').addClass('grayed');
+                } else {
+                    $('#tick').removeClass('grayed');
+                }
+            }
+
+            function handleTickBuy() {
+                if (theNumber >= 100*Math.pow(10,tick-1)){
+                    theNumber -= 100*Math.pow(10,tick-1);
+                    tick *= 2;
+                }
+            }
+
+            let theNumber = 0;
+            let multiSelect = 1;
+            let tick = 1;            
+            function updateMyGame(deltaTime, totalTime) {
+                theNumber += deltaTime * tick;                
+                updateTheNumber();
+                updateTickCost();                
+            }            
+
+            $(document).ready(function(){
+                $('#menubuttons .btn-main').on('click', handleMenuButtonClick);
+                $('#multiselect .btn-main').on('click', handleMultiButtonClick); 
+                $('#tick').on('click', handleTickBuy);
+            });
+        </script>        
     </body>
 </html>

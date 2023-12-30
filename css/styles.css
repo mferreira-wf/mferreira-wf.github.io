@@ -2,3 +2,35 @@ body {
     background-color: black;
     color: white
 }
+
+.btn-main {    
+    background-color: maroon;
+    color:red;
+    font-weight: bold;
+    text-shadow: 
+        -1px -1px 0 black,  
+        1px -1px 0 black,
+        -1px 1px 0 black,
+        1px 1px 0 black;    
+}
+
+.btn-main.selected {
+    background-color:#ffc800;
+    color:red;    
+    font-weight: bold;
+    text-shadow: 1px;
+}
+
+.btn-main.grayed {
+    background-color:gray;
+    color:red;    
+    font-weight: bold;  
+}
+
+.main-left{    
+    border-radius: 0.5rem 0 0 0.5rem;
+}
+
+.main-right{    
+    border-radius: 0 0.5rem 0.5rem 0;    
+}
