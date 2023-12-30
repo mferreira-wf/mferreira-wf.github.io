@@ -42,11 +42,29 @@ function updateTickCost(){
     }
 }
 
-function updateGenBtnCost(mult) {
+function updateGenBtnCost(mult, nrows) {
     if (mult == -1) {
-        $('.btn-gen').addClass('grayed');
-    }
+        return;
+    } else {
+        for (let i = 0; i < nrows; i++) {
+            button = $('#ngenqtybuy' + (i + 1));
+            button2 = $('#ngencost' + (i + 1));
+            button.text('+' + mult);
+            button2.text('Cost: ' + (button2.attr('basecost') * mult));            
+        }
+    }    
+}
 
+function updateGenBtnAvaiable(mult, n) {
+    $('.btn-gen').addClass('grayed');
+    $('.btn-gen').each(function() {
+        let baseCost = $(this).find('.btn-cost').attr('basecost');
+        if (mult == -1) {
+            return;
+        } else if (baseCost * mult <= n) {
+            $(this).removeClass('grayed');
+        }
+    });
 }
 
 function makeGeneratorRow(nrows, id) {
@@ -69,9 +87,9 @@ function makeGeneratorCol(id) {
     let gencolprogbar = $('<div class="col-xl-6" id="ngenprogbar' + nid + '"></div>');
     let gencolbutton = $('<div class="col-xl-2 my-2"></div>');
     let genbuttonpos = $('<div class="d-flex justify-content-end"></div>');
-    let genbutton = $('<button class="btn btn-main btn-gen border border-3 border-danger" style="font-size:20px; width:170px" basecost="' + Math.pow(10,nid)  + '"></button>');
+    let genbutton = $('<button class="btn btn-main btn-gen border border-3 border-danger" style="font-size:20px; width:170px"></button>');
     let genbuttonqty = $('<span id="ngenqtybuy' + nid + '">+1</span><br>');
-    let genbuttoncost = $('<span id="ngencost' + nid + '">Cost: ' + Math.pow(10,nid) + '</span>');
+    let genbuttoncost = $('<span class="btn-cost" id="ngencost' + nid + '" basecost="' + Math.pow(10,nid)  + '">Cost: ' + Math.pow(10,nid) + '</span>');
     
     container.append(gencolname);
     container.append(gencolqty);

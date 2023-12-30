@@ -122,7 +122,7 @@
                 
                 updateTheNumber();
                 updateTickCost();
-                updateGenBtnCost(multiSelect);
+                updateGenBtnAvaiable(multiSelect, theNumber);
             }
             
             $(document).ready(function(){
@@ -138,7 +138,7 @@
                 $('#multiselect .btn-main').each(function(index) {                    
                     $(this).on('click', function() {
                         multiSelect = handleMultiButtonClick(index);
-                        console.log('multi', multiSelect);
+                        updateGenBtnCost(multiSelect, generators);
                     });
                 });
             });
