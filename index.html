@@ -123,8 +123,9 @@
             }
 
             function updateTickCost(){
-                $('#tickcost').text(100*Math.pow(10,tick-1));
-                if (theNumber < 100*Math.pow(10,tick-1)) {
+                console.log("tick number", Math.log2(tick));
+                $('#tickcost').text(100*Math.pow(10,Math.log2(tick)));
+                if (theNumber < 100*Math.pow(10,Math.log2(tick))) {
                     $('#tick').addClass('grayed');
                 } else {
                     $('#tick').removeClass('grayed');
@@ -132,8 +133,8 @@
             }
 
             function handleTickBuy() {
-                if (theNumber >= 100*Math.pow(10,tick-1)){
-                    theNumber -= 100*Math.pow(10,tick-1);
+                if (theNumber >= 100*Math.pow(10,Math.log2(tick))){
+                    theNumber -= 100*Math.pow(10,Math.log2(tick));
                     tick *= 2;
                 }
             }
