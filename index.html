@@ -124,8 +124,9 @@
 
             function updateTickCost(){
                 console.log("tick number", Math.log2(tick));
-                $('#tickcost').text(100*Math.pow(10,Math.log2(tick)));
-                if (theNumber < 100*Math.pow(10,Math.log2(tick))) {
+                let tickCurrentCost = 100*Math.pow(10,Math.log2(tick));
+                $('#tickcost').text(tickCurrentCost > 1e6 ? tickCurrentCost.toExponential() : tickCurrentCost.toLocaleString());
+                if (theNumber < tickCurrentCost) {
                     $('#tick').addClass('grayed');
                 } else {
                     $('#tick').removeClass('grayed');
@@ -133,8 +134,9 @@
             }
 
             function handleTickBuy() {
-                if (theNumber >= 100*Math.pow(10,Math.log2(tick))){
-                    theNumber -= 100*Math.pow(10,Math.log2(tick));
+                let tickCurrentCost = 100*Math.pow(10,Math.log2(tick));
+                if (theNumber >= tickCurrentCost){
+                    theNumber -= tickCurrentCost;
                     tick *= 2;
                 }
             }
