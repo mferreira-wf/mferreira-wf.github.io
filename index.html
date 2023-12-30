@@ -126,11 +126,8 @@
             }
             
             $(document).ready(function(){
-                makeGeneratorRow(generators, 'gencontainer');
+                makeGeneratorRow(generators, 'gencontainer');                
                 
-                for (let i = 0; i < generators; i++) {                    
-                    makeGeneratorCol('ngenrow' + (i + 1));
-                }
                 $('#tick').on('click', handleTickBuy);
                 $('#menubuttons .btn-main').each(function(index) {                    
                     $(this).on('click', function() {

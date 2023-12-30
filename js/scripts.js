@@ -52,34 +52,39 @@ function updateGenBtnCost(mult) {
 function makeGeneratorRow(nrows, id) {
     let container = $('#' + id);
     for (let i = 0; i < nrows; i++) {
-        let newRow = $('<div class="row m-2 border border-2 border-danger" id="ngenrow' + (i + 1) + '"></div>');
-        container.append(newRow);
+        let newrow = $('<div class="row m-4 border border-2 border-danger" id="ngenrow' + (i + 1) + '"></div>');   
+        container.append(newrow);
+        makeGeneratorCol('ngenrow' + (i + 1));
     }
 }
 
 function makeGeneratorCol(id) {
     let container = $('#' + id);
     let nid = id.match(/\d+/)[0];
-    let gencolname = $('<div class="col-2 h3 text-danger text-weight-bold border">Generator '+ nid + ':</div>');
-    let gencolqty = $('<div class="col-2 border"></div>');
+
+    let gencolname = $('<div class="col-xl-2 h3 text-danger text-weight-bold border">Generator ' + nid + ':</div>');
+    let gencolqty = $('<div class="col-xl-2 border"></div>');
     let genqty = $('<div class="text-danger text-weight-bold h4" id="ngen' + nid + '">0</div>');
     let geneff = $('<div class="h6 text-light">(Eff:<span id="ngeneff' + nid + '">0</span>%)</div>');
-    let gencolprogbar = $('<div class="col-6 border" id="ngenprogbar' + nid + '"></div>');    
-    let gencolbutton = $('<div class="col-2 border"></div>');
+    let gencolprogbar = $('<div class="col-xl-6 border" id="ngenprogbar' + nid + '"></div>');
+    let gencolbutton = $('<div class="col-xl-2 border"></div>');
     let genbuttonpos = $('<div class="d-flex justify-content-end"></div>');
     let genbutton = $('<button class="btn btn-main btn-gen border border-3 border-danger" style="font-size:20px; width:170px" basecost="' + Math.pow(10,nid)  + '"></button>');
     let genbuttonqty = $('<span id="ngenqtybuy' + nid + '">+1</span><br>');
-    let genbuttoncost = $('<span id="ngencost' + nid + '">Cost: ' + Math.pow(10,nid) + '</span>');    
-       
+    let genbuttoncost = $('<span id="ngencost' + nid + '">Cost: ' + Math.pow(10,nid) + '</span>');
+    
     container.append(gencolname);
-    gencolqty.append(genqty);
-    gencolqty.append(geneff);    
     container.append(gencolqty);
     container.append(gencolprogbar);
-    gencolbutton.append(genbuttonpos);
-    genbuttonpos.append(genbutton);
+    container.append(gencolbutton);
+    
+    gencolname.append('Generator ' + nid + ':');
+    gencolqty.append(genqty);
+    gencolqty.append(geneff);
     genbutton.append(genbuttonqty);
     genbutton.append(genbuttoncost);
-    container.append(gencolbutton);
-}            
+    genbuttonpos.append(genbutton);
+    gencolbutton.append(genbuttonpos);
+}
+            
 
