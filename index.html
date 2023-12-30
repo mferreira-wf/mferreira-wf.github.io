@@ -72,19 +72,24 @@
                                 </div>
                             </div>
                         </div>
-                    </div>
-                    <div class="row menu-content" id="m1" style="display:none">b
-
-                    </div>
-                    <div class="row menu-content" id="m2" style="display:none">
-                        <div class="col-md-12 m-2">
-                            <div class="text-center"> 
-                                <img src="img/prestige.png" class="img-fluid" alt="Imagem">
-                            </div>
+                        <div class="container" id="gencontainer">
                         </div>
                     </div>
-                </div>
-                
+                    <div class="row menu-content" id="m1" style="display:none">
+                        <div class="col-md-12">
+                            <div class="text-center"> 
+                                <img src="img/underconstruction.jpg" class="img-fluid" alt="Imagem">   
+                            </div>
+                        </div>   
+                    </div>
+                    <div class="row menu-content" id="m2" style="display:none">
+                        <div class="col-md-12">
+                            <div class="text-center"> 
+                                <img src="img/underconstruction.jpg" class="img-fluid" alt="Imagem">   
+                            </div>
+                        </div>                        
+                    </div>
+                </div>                
             </div>
 
 
@@ -92,50 +97,9 @@
 
 
         </div>
+        <script src="js/scripts.js"></script>
+        
         <script>
-            let lastTime = null;
-            let totalTime = 0;
-
-            setInterval(function gameLoop() {
-                const currentTime = Date.now();
-                if (lastTime === null) {
-                    lastTime = currentTime;
-                }
-                const deltaTime = currentTime - lastTime;
-                totalTime += deltaTime;
-                lastTime = currentTime;
-                updateMyGame(deltaTime, totalTime);
-            } , 1000 / 60);           
-
-            function handleMenuButtonClick() {
-                var index = $('#menubuttons .btn-main').index(this);
-
-                $('#menubuttons .btn-main').removeClass('selected');                
-                $(this).addClass('selected');
-                $('.menu-content').hide(); 
-                $('#m' + (index)).show(); 
-            }
-
-            function handleMultiButtonClick(){ 
-                $('#multiselect .btn-main').removeClass('selected');
-                $(this).addClass('selected');
-                multiSelect = parseFloat($(this).val());                
-            }
-
-            function updateTheNumber() {
-                $('#thenumber').text(theNumber);
-            }
-
-            function updateTickCost(){
-                console.log("tick number", Math.log2(tick));
-                let tickCurrentCost = 100*Math.pow(10,Math.log2(tick));
-                $('#tickcost').text(tickCurrentCost > 1e6 ? tickCurrentCost.toExponential() : tickCurrentCost.toLocaleString());
-                if (theNumber < tickCurrentCost) {
-                    $('#tick').addClass('grayed');
-                } else {
-                    $('#tick').removeClass('grayed');
-                }
-            }
 
             function handleTickBuy() {
                 let tickCurrentCost = 100*Math.pow(10,Math.log2(tick));
@@ -145,20 +109,42 @@
                 }
             }
 
-            let theNumber = 0;
+            
+            
+            let theNumber = 10;
+            let generators = 4;
             let multiSelect = 1;
-            let tick = 1;            
+            let tick = 1;
+            
+            
             function updateMyGame(deltaTime, totalTime) {
-                theNumber += deltaTime * tick;                
+                theNumber += deltaTime * tick;
+                
                 updateTheNumber();
-                updateTickCost();                
-            }            
-
+                updateTickCost();
+                updateGenBtnCost(multiSelect);
+            }
+            
             $(document).ready(function(){
-                $('#menubuttons .btn-main').on('click', handleMenuButtonClick);
-                $('#multiselect .btn-main').on('click', handleMultiButtonClick); 
+                makeGeneratorRow(generators, 'gencontainer');
+                
+                for (let i = 0; i < generators; i++) {                    
+                    makeGeneratorCol('ngenrow' + (i + 1));
+                }
                 $('#tick').on('click', handleTickBuy);
+                $('#menubuttons .btn-main').each(function(index) {                    
+                    $(this).on('click', function() {
+                        handleMenuButtonClick(index);
+                    });
+                });
+
+                $('#multiselect .btn-main').each(function(index) {                    
+                    $(this).on('click', function() {
+                        multiSelect = handleMultiButtonClick(index);
+                        console.log('multi', multiSelect);
+                    });
+                });
             });
-        </script>        
+        </script>
     </body>
 </html>
