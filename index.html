@@ -54,7 +54,7 @@
                     <div class="row justify-content-center align-items-center h1 border border-3 border-top-0 border-start-0 border-end-0 border-danger" id="thenumber">x</div>
                     <div class="row menu-content" id="m0">
                         <div class="container">
-                            <div class="row m-2 h3 justify-content-center align-items-center text-danger">Upgrade Speed</div>
+                            <div class="row m-2 h3 justify-content-center align-items-center text-danger">Double Speed</div>
                             <div class="row m-2 justify-content-center align-items-center">
                                 <div class="col-auto">
                                     <button class="btn btn-main rounded border border-danger border-3" id="tick"
@@ -101,28 +101,59 @@
         
         <script>
 
+            let thenumber = 10;            
+            let multiselect = 1;
+            let tick = 1;           
+
+            let generators = 4;
+            let ngen = [];
+            let ngeneff = [];
+            let ngenbought = [];
+            const ngenprod = 0.001;
+
+            for (let i = 1; i <= generators; i++) {
+                ngen[i] = 0;
+                ngeneff[i] = 1;
+                ngenbought[i] = 0;
+                
+            }   
+            
             function handleTickBuy() {
                 let tickCurrentCost = 100*Math.pow(10,Math.log2(tick));
-                if (theNumber >= tickCurrentCost){
-                    theNumber -= tickCurrentCost;
+                if (thenumber >= tickCurrentCost){
+                    thenumber -= tickCurrentCost;
                     tick *= 2;
                 }
             }
 
-            
-            
-            let theNumber = 10;
-            let generators = 4;
-            let multiSelect = 1;
-            let tick = 1;
-            
+            function handleGenBtnClick() {
+                let index = $('#gencontainer .btn-main').index($(this)) + 1;
+                console.log('index: ', index);
+                let baseCost = $(this).find('.btn-cost').attr('basecost');
+                let quantity = multiselect === -1 ? $(this).find('.btn-qty').attr('qty') : multiselect;
+                let totalCost = baseCost * quantity;
+
+                if (thenumber >= totalCost) {
+                    thenumber -= totalCost;
+                    ngen[index] += parseInt(quantity);
+                    ngenbought[index] += quantity;                    
+                    ngeneff[index] *= Math.pow(1.01, (Math.log10(ngenbought[index])) / 10);   
+                }
+            }       
             
             function updateMyGame(deltaTime, totalTime) {
-                theNumber += deltaTime * tick;
+                ngen[3] += tick * ngen[4] * ngeneff[4] * ngenprod * deltaTime;
+                ngen[2] += tick * ngen[3] * ngeneff[3] * ngenprod * deltaTime;
+                ngen[1] += tick * ngen[2] * ngeneff[2] * ngenprod * deltaTime;
+                thenumber += tick * ngen[1] * ngeneff[1] * ngenprod * deltaTime;
                 
-                updateTheNumber();
+                
+                updateTheNumber(thenumber);
                 updateTickCost();
-                updateGenBtnAvaiable(multiSelect, theNumber);
+                updateGenBtnAvaiable(multiselect, thenumber);
+                updateGenBtnCost(multiselect, generators);
+                updateNgen(generators);
+                
             }
             
             $(document).ready(function(){
@@ -137,11 +168,11 @@
 
                 $('#multiselect .btn-main').each(function(index) {                    
                     $(this).on('click', function() {
-                        multiSelect = handleMultiButtonClick(index);
-                        updateGenBtnCost(multiSelect, generators);
+                        multiselect = handleMultiButtonClick(index);   
                     });
                 });
-            });
+                $('#gencontainer').on('click', '.btn-main', handleGenBtnClick);
+            });            
         </script>
     </body>
 </html>
