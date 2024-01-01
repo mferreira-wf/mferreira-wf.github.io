@@ -116,13 +116,10 @@
                 ngeneff[i] = 1;
                 ngenbought[i] = 0;
                 
-            }   
-            
-            
+            }  
 
             function handleGenBtnClick() {
-                let index = $('#gencontainer .btn-main').index($(this)) + 1;
-                console.log('index: ', index);
+                let index = $('#gencontainer .btn-main').index($(this)) + 1; 
                 let baseCost = $(this).find('.btn-cost').attr('basecost');
                 let quantity = multiselect === -1 ? $(this).find('.btn-qty').attr('qty') : multiselect;
                 let totalCost = baseCost * quantity;
@@ -153,7 +150,9 @@
             $(document).ready(function(){
                 makeGeneratorRow(generators, 'gencontainer');                
                 
-                $('#tick').on('click', tick = handleTickBuy(thenumber,tick));
+                $('#tick').on('click', function() {
+                     tick = handleTickBuy(thenumber, tick);
+                });
                 $('#menubuttons .btn-main').each(function(index) {                    
                     $(this).on('click', function() {
                         handleMenuButtonClick(index);
