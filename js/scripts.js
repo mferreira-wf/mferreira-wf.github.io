@@ -28,6 +28,27 @@ function handleMultiButtonClick(index){
     return multi;                
 }
 
+/**
+ * 
+ * @param {index, multiplier, number} values 
+ * @returns 
+ */
+function handleGenBtnClick(values) {            
+    let i = values[0]; 
+    let m = values[1];
+    let n = values[2];    
+    let baseCost = parseFloat($('#gencontainer .btn-main').eq(i).find('.btn-cost').attr('basecost'));
+    let qty = m === -1 ? parseFloat($('#gencontainer .btn-main').eq(i).find('.btn-qty').attr('qty')) : m;
+    let cost = baseCost * qty;
+    if (n >= cost) {
+        n -= cost;
+        i++;
+        return [i, qty , n];
+    } else {
+        return -1;
+    }                
+}
+
 function updateTheNumber(n) {
     let num = parseFloat(n);    
     let formattedNumber = num >= 1e12 ? num.toExponential(2) : Math.floor(num).toLocaleString();
@@ -49,21 +70,25 @@ function updateNgen(nrows) {
     }
 }
 
-function updateTickCost(){    
-    let tickCurrentCost = 100*Math.pow(10,Math.log2(tick));
-    $('#tickcost').text(tickCurrentCost > 1e6 ? tickCurrentCost.toExponential() : tickCurrentCost.toLocaleString());
-    if (thenumber < tickCurrentCost) {
+function updateTickCost(n, t){    
+    let cost = 100*Math.pow(10,Math.log2(t));
+    $('#tickcost').text(cost > 1e6 ? cost.toExponential(2) : cost.toLocaleString());
+    if (n < cost) {
         $('#tick').addClass('grayed');
     } else {
         $('#tick').removeClass('grayed');
     }
 }
 
-function handleTickBuy(n, t) {
-    let tickCurrentCost = 100*Math.pow(10,Math.log2(t));
-    if (n >= tickCurrentCost){        
-        return t *= 2;
-    }
+function handleTickBuy(x) {
+    let n = x[0];
+    let t = x[1];
+    let cost = 100*Math.pow(10,Math.log2(t));
+    if (n >= cost){        
+        n -= cost;
+        t *= 2;
+    }    
+    return [n,t];
 }
 
 function updateGenBtnCost(mult) {
@@ -79,14 +104,18 @@ function updateGenBtnCost(mult) {
                     : Math.floor(qty).toLocaleString()
             ));
             let currentcost = parseFloat(buttoncost.attr('basecost')) * qty;
-            buttoncost.text('Cost: ' + (
-                currentcost >=1e7
-                    ? currentcost.toExponential(2)
-                    : Math.floor(currentcost).toLocaleString()
-            ));
+            if (currentcost >= 1) {
+                buttoncost.text('Cost: ' + (
+                    currentcost >=1e7
+                        ? currentcost.toExponential(2)
+                        : Math.floor(currentcost).toLocaleString()
+                ));
+            } else {
+                buttoncost.text('Cost ' + parseFloat(buttoncost.attr('basecost')).toLocaleString());
+            }
         } else {
             buttonqty.text('+' + mult);
-            buttoncost.text('Cost: ' + parseFloat(buttoncost.attr('basecost') * mult));
+            buttoncost.text('Cost: ' + parseFloat(buttoncost.attr('basecost') * mult).toLocaleString());
         }
     });
 }
@@ -128,7 +157,7 @@ function makeGeneratorCol(id) {
     let gencolprogbar = $('<div class="col-xl-6" id="ngenprogbar' + nid + '"></div>');
     let gencolbutton = $('<div class="col-xl-2 my-2"></div>');
     let genbuttonpos = $('<div class="d-flex justify-content-end"></div>');
-    let genbutton = $('<button class="btn btn-main btn-gen border border-3 border-danger" style="font-size:20px; width:170px"></button>');
+    let genbutton = $('<button class="btn btn-main btn-gen border border-3 border-danger" style="font-size:20px; width:200px"></button>');
     let genbuttonqty = $('<span class="btn-qty" id="ngenqtybuy' + nid + '">+1</span><br>');
     let genbuttoncost = $('<span class="btn-cost" id="ngencost' + nid + '" basecost="' + Math.pow(10,nid)  + '">Cost: ' + Math.pow(10,nid) + '</span>');
     

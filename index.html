@@ -116,22 +116,18 @@
                 ngeneff[i] = 1;
                 ngenbought[i] = 0;
                 
-            }  
-
-            function handleGenBtnClick() {
-                let index = $('#gencontainer .btn-main').index($(this)) + 1; 
-                let baseCost = $(this).find('.btn-cost').attr('basecost');
-                let quantity = multiselect === -1 ? $(this).find('.btn-qty').attr('qty') : multiselect;
-                let totalCost = baseCost * quantity;
-
-                if (thenumber >= totalCost) {
-                    thenumber -= totalCost;
-                    ngen[index] += parseInt(quantity);
-                    ngenbought[index] += quantity;                    
-                    //ngeneff[index] *= Math.pow(1.01, (Math.log10(ngenbought[index])) / 10);   
-                }
-            }       
+            }
             
+            function buyGen (values) {
+                let i = values[0];
+                let m = values[1];
+                ngen[i] += parseFloat(m);
+                ngenbought[i] += parseFloat(m);
+                let effmulti = Math.floor(Math.log10(ngenbought[i])/100);
+                ngeneff[i] = 1 * effmulti;
+                return;
+            }
+
             function updateMyGame(deltaTime, totalTime) {
                 ngen[3] += tick * ngen[4] * ngeneff[4] * ngenprod * deltaTime;
                 ngen[2] += tick * ngen[3] * ngeneff[3] * ngenprod * deltaTime;
@@ -140,9 +136,9 @@
                 
                 
                 updateTheNumber(thenumber);
-                updateTickCost();
+                updateTickCost(thenumber, tick);
                 updateGenBtnAvaiable(multiselect, thenumber);
-                updateGenBtnCost(multiselect, generators);
+                updateGenBtnCost(multiselect);
                 updateNgen(generators);
                 
             }
@@ -151,7 +147,9 @@
                 makeGeneratorRow(generators, 'gencontainer');                
                 
                 $('#tick').on('click', function() {
-                     tick = handleTickBuy(thenumber, tick);
+                    let newvalues = handleTickBuy([thenumber, tick]);
+                    thenumber = !isNaN(newvalues[0]) ? newvalues[0] : Infinity;
+                    tick = newvalues[1];
                 });
                 $('#menubuttons .btn-main').each(function(index) {                    
                     $(this).on('click', function() {
@@ -164,7 +162,15 @@
                         multiselect = handleMultiButtonClick(index);   
                     });
                 });
-                $('#gencontainer').on('click', '.btn-main', handleGenBtnClick);
+                $('#gencontainer').on('click', '.btn-main', function() {
+                    let index = $('#gencontainer .btn-main').index(this); 
+                    let newvalues = handleGenBtnClick([index, multiselect, thenumber]);
+
+                    if (newvalues !== -1) {                        
+                        buyGen([newvalues[0], newvalues[1]]);
+                        thenumber = newvalues[1];
+                    }
+                }); 
             });            
         </script>
     </body>
