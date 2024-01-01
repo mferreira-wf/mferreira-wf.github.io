@@ -124,7 +124,7 @@
                 ngen[i] += parseFloat(m);
                 ngenbought[i] += parseFloat(m);
                 let effmulti = Math.floor(Math.log10(ngenbought[i])/100);
-                ngeneff[i] = 1 * effmulti;
+                ngeneff[i] = 1 + effmulti;
                 return;
             }
 
