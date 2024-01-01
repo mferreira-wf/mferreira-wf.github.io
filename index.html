@@ -118,13 +118,7 @@
                 
             }   
             
-            function handleTickBuy() {
-                let tickCurrentCost = 100*Math.pow(10,Math.log2(tick));
-                if (thenumber >= tickCurrentCost){
-                    thenumber -= tickCurrentCost;
-                    tick *= 2;
-                }
-            }
+            
 
             function handleGenBtnClick() {
                 let index = $('#gencontainer .btn-main').index($(this)) + 1;
@@ -159,7 +153,7 @@
             $(document).ready(function(){
                 makeGeneratorRow(generators, 'gencontainer');                
                 
-                $('#tick').on('click', handleTickBuy);
+                $('#tick').on('click', tick = handleTickBuy(thenumber,tick));
                 $('#menubuttons .btn-main').each(function(index) {                    
                     $(this).on('click', function() {
                         handleMenuButtonClick(index);

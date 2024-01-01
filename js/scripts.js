@@ -59,6 +59,13 @@ function updateTickCost(){
     }
 }
 
+function handleTickBuy(n, t) {
+    let tickCurrentCost = 100*Math.pow(10,Math.log2(t));
+    if (n >= tickCurrentCost){        
+        return t *= 2;
+    }
+}
+
 function updateGenBtnCost(mult) {
     $('.btn-gen').each(function() {
         let button = $(this);
@@ -66,8 +73,17 @@ function updateGenBtnCost(mult) {
         let buttoncost = button.find('.btn-cost');        
         if (mult == -1) {
             let qty = parseFloat(buttonqty.attr('qty'));
-            buttonqty.text('+' + qty);
-            buttoncost.text('Cost: ' + parseFloat(buttoncost.attr('basecost') * qty));
+            buttonqty.text('+' + (
+                qty >=1e7
+                    ? qty.toExponential(2)
+                    : Math.floor(qty).toLocaleString()
+            ));
+            let currentcost = parseFloat(buttoncost.attr('basecost')) * qty;
+            buttoncost.text('Cost: ' + (
+                currentcost >=1e7
+                    ? currentcost.toExponential(2)
+                    : Math.floor(currentcost).toLocaleString()
+            ));
         } else {
             buttonqty.text('+' + mult);
             buttoncost.text('Cost: ' + parseFloat(buttoncost.attr('basecost') * mult));
