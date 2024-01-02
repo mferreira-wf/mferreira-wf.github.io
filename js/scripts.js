@@ -5,6 +5,10 @@ function handleMenuButtonClick(index) {
     $('#m' + (index)).show(); 
 }
 
+function hardReset() {
+    window.localStorage.clear();
+}
+
 function handleHardReset() {
     const confirmation = confirm("This is permanent, are you sure?");
     
@@ -152,7 +156,7 @@ function makeGeneratorCol(id) {
     let genbuttonpos = $('<div class="d-flex justify-content-end"></div>');
     let genbutton = $('<button class="btn btn-main btn-gen border border-3 border-danger" style="font-size:20px; width:200px"></button>');
     let genbuttonqty = $('<span class="btn-qty" id="ngenqtybuy' + nid + '">+1</span><br>');
-    let genbuttoncost = $('<span class="btn-cost" id="ngencost' + nid + '" basecost="' + Math.pow(10,nid)  + '">Cost: ' + Math.pow(10,nid) + '</span>');
+    let genbuttoncost = $('<span class="btn-cost" id="ngencost' + nid + '" basecost="' + Math.pow(10,(2*nid)-1) + '">Cost: ' + Math.pow(10,nid) + '</span>');
     
     container.append(gencolname);
     container.append(gencolqty);

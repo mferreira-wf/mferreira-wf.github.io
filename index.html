@@ -54,7 +54,9 @@
                     </div>
                 </div>
                 <div class="col-xl main-right my-2 border border-3 border-danger" id="mainbody">
-                    <div class="row justify-content-center align-items-center h1 border border-3 border-top-0 border-start-0 border-end-0 border-danger" id="thenumber">x</div>
+                    <div class="row justify-content-center text-center align-items-center border border-3 border-danger" >
+                        <div class="col-xl-12 h1 my-5 huge-number" id="thenumber">x</div>
+                    </div>
                     <div class="row menu-content" id="m0">
                         <div class="container">
                             <div class="row m-2 h3 justify-content-center align-items-center text-danger">Double Speed</div>
@@ -141,19 +143,14 @@
                 }
             }
 
-            function hardReset() {
-                window.localStorage.clear();
-            }
-
-
-             
-            /* // ta calculando offline errado
-            for (let deltaTime = 0; deltaTime < totalTime; deltaTime++) {
+            offlineTime = performance.now() - totalTime;
+            
+            for (let deltaTime = 0; deltaTime < offlineTime; deltaTime++) {
                 for (let i = generators; i >= 1; i--) {
                     ngen[i-1] += tick * ngen[i] * ngeneff[i] * ngenprod;
                 }
                 thenumber += tick * ngen[1] * ngeneff[1] * ngenprod;
-            } */
+            }
              
             setInterval(function gameLoop() {
                 const currentTime = performance.now();
@@ -173,19 +170,19 @@
                     saveGame(totalTime);
                     lastSave = totalTime;
                 }
-
-            ngen[3] += tick * ngen[4] * ngeneff[4] * ngenprod * deltaTime;
-            ngen[2] += tick * ngen[3] * ngeneff[3] * ngenprod * deltaTime;
-            ngen[1] += tick * ngen[2] * ngeneff[2] * ngenprod * deltaTime;
-            thenumber += tick * ngen[1] * ngeneff[1] * ngenprod * deltaTime;
             
-            
-            updateTheNumber(thenumber);
-            updateTickCost(thenumber, tick);
-            updateGenBtnAvaiable(multiselect, thenumber);
-            updateGenBtnCost(multiselect);
-            updateNgen(generators);
-            
+                for (let i = generators; i > 1; i--) {
+                    ngen[i-1] += tick * ngen[i] * ngeneff[i] * ngenprod * deltaTime;
+                }
+                thenumber += tick * ngen[1] * ngeneff[1] * ngenprod * deltaTime;
+                
+                
+                updateTheNumber(thenumber);
+                updateTickCost(thenumber, tick);
+                updateGenBtnAvaiable(multiselect, thenumber);
+                updateGenBtnCost(multiselect);
+                updateNgen(generators);
+                
             }
             
             

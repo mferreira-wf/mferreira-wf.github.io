@@ -3,6 +3,11 @@ body {
     color: white
 }
 
+.huge-number {
+    font-weight:bold;
+    font-size: 4rem;
+}
+
 .btn-main {    
     background-color: maroon;
     color:red;
@@ -40,6 +45,7 @@ body {
 
 .main-left{    
     border-radius: 0.5rem 0 0 0.5rem;
+    max-height: 600px;
 }
 
 .main-right{    
