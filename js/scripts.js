@@ -1,24 +1,17 @@
-let lastTime = null;
-let totalTime = 0;
-
-setInterval(function gameLoop() {
-    const currentTime = Date.now();
-    if (lastTime === null) {
-        lastTime = currentTime;
-    }
-    const deltaTime = currentTime - lastTime;
-    totalTime += deltaTime;
-    lastTime = currentTime;
-    updateMyGame(deltaTime, totalTime);
-} , 1000 / 60);           
-
-function handleMenuButtonClick(index) {
-    //var index = $('#menubuttons .btn-main').index(this);
-    
+function handleMenuButtonClick(index) {  
     $('#menubuttons .btn-main').removeClass('selected');                
     $('#menubuttons .btn-main').eq(index).addClass('selected');
     $('.menu-content').hide(); 
     $('#m' + (index)).show(); 
+}
+
+function handleHardReset() {
+    const confirmation = confirm("This is permanent, are you sure?");
+    
+    if (confirmation) {
+        hardReset();
+        loadGame();
+    } 
 }
 
 function handleMultiButtonClick(index){ 
