@@ -14,6 +14,17 @@ body {
         1px 1px 0 black;    
 }
 
+.btn-hard {    
+    background-color:#ff0000;
+    color:#ffffff;
+    font-weight: bold;
+    text-shadow: 
+        -1px -1px 0 black,  
+        1px -1px 0 black,
+        -1px 1px 0 black,
+        1px 1px 0 black;    
+}
+
 .btn-main.selected {
     background-color:#ffc800;
     color:red;    

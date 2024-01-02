@@ -48,6 +48,9 @@
                         <div class="row m-2 justify-content-center align-items-center h4">
                             <div class="btn btn-main h4 rounded border border-danger border-3" style="width: 200px">Prestige</div>
                         </div>
+                        <div class="row m-2 justify-content-center align-items-center h4">
+                            <div class="btn btn-hard h4 rounded border border-danger border-3" style="width: 200px">HARD RESET</div>
+                        </div>
                     </div>
                 </div>
                 <div class="col-xl main-right my-2 border border-3 border-danger" id="mainbody">
@@ -100,23 +103,91 @@
         <script src="js/scripts.js"></script>
         
         <script>
-
-            let thenumber = 10;            
-            let multiselect = 1;
-            let tick = 1;           
-
-            let generators = 4;
-            let ngen = [];
-            let ngeneff = [];
-            let ngenbought = [];
+            let lastTime = null;            
+            let lastSave = 0;
             const ngenprod = 0.001;
+            
+            function loadGame() {
+                totalTime = parseFloat(window.localStorage.getItem("totaltime")) || 0;
+                tick = parseFloat(window.localStorage.getItem("currenttick")) || 1;
+                thenumber = parseFloat(window.localStorage.getItem("thenumber")) || 10;
+                multiselect = parseFloat(window.localStorage.getItem("multiselect")) || 1;
+                generators = parseFloat(window.localStorage.getItem("generators")) || 4;
 
-            for (let i = 1; i <= generators; i++) {
-                ngen[i] = 0;
-                ngeneff[i] = 1;
-                ngenbought[i] = 0;
-                
+                ngen = [];
+                ngeneff = [];
+                ngenbought = [];
+
+                for (let i = 1; i <= generators; i++) {
+                    ngen[i] = parseFloat(window.localStorage.getItem("ngen" + i)) || 0;
+                    ngeneff[i] = parseFloat(window.localStorage.getItem("ngeneff" + i)) || 1;
+                    ngenbought[i] = parseFloat(window.localStorage.getItem("ngenbought" + i)) || 0;
+                }
             }
+
+            loadGame();
+
+            function saveGame() {
+                window.localStorage.setItem("totaltime", totalTime);
+                window.localStorage.setItem("currenttick", tick);
+                window.localStorage.setItem("thenumber", thenumber);
+                window.localStorage.setItem("multiselect", multiselect);
+                window.localStorage.setItem("generators", generators);
+
+                for (let i = 1; i <= generators; i++) {
+                    window.localStorage.setItem("ngen" + i, ngen[i]);
+                    window.localStorage.setItem("ngeneff" + i, ngeneff[i]);
+                    window.localStorage.setItem("ngenbought" + i, ngenbought[i]);
+                }
+            }
+
+            function hardReset() {
+                window.localStorage.clear();
+            }
+
+
+             
+            /* // ta calculando offline errado
+            for (let deltaTime = 0; deltaTime < totalTime; deltaTime++) {
+                for (let i = generators; i >= 1; i--) {
+                    ngen[i-1] += tick * ngen[i] * ngeneff[i] * ngenprod;
+                }
+                thenumber += tick * ngen[1] * ngeneff[1] * ngenprod;
+            } */
+             
+            setInterval(function gameLoop() {
+                const currentTime = performance.now();
+                if (lastTime === null) {
+                    lastTime = currentTime;
+                }
+                const deltaTime = currentTime - lastTime;
+                totalTime += deltaTime;
+                lastTime = currentTime;
+                updateMyGame(deltaTime, totalTime);
+            } , 1000 / 60);         
+
+            
+            // Loop principal do jogo 
+            function updateMyGame(deltaTime, totalTime) {
+                if (totalTime - lastSave >= 5000) {
+                    saveGame(totalTime);
+                    lastSave = totalTime;
+                }
+
+            ngen[3] += tick * ngen[4] * ngeneff[4] * ngenprod * deltaTime;
+            ngen[2] += tick * ngen[3] * ngeneff[3] * ngenprod * deltaTime;
+            ngen[1] += tick * ngen[2] * ngeneff[2] * ngenprod * deltaTime;
+            thenumber += tick * ngen[1] * ngeneff[1] * ngenprod * deltaTime;
+            
+            
+            updateTheNumber(thenumber);
+            updateTickCost(thenumber, tick);
+            updateGenBtnAvaiable(multiselect, thenumber);
+            updateGenBtnCost(multiselect);
+            updateNgen(generators);
+            
+            }
+            
             
             function buyGen (values) {
                 let i = values[0];
@@ -128,21 +199,10 @@
                 return;
             }
 
-            function updateMyGame(deltaTime, totalTime) {
-                ngen[3] += tick * ngen[4] * ngeneff[4] * ngenprod * deltaTime;
-                ngen[2] += tick * ngen[3] * ngeneff[3] * ngenprod * deltaTime;
-                ngen[1] += tick * ngen[2] * ngeneff[2] * ngenprod * deltaTime;
-                thenumber += tick * ngen[1] * ngeneff[1] * ngenprod * deltaTime;
-                
-                
-                updateTheNumber(thenumber);
-                updateTickCost(thenumber, tick);
-                updateGenBtnAvaiable(multiselect, thenumber);
-                updateGenBtnCost(multiselect);
-                updateNgen(generators);
-                
-            }
             
+            $(window).on('beforeunload', function() {
+                saveGame();
+            })
             $(document).ready(function(){
                 makeGeneratorRow(generators, 'gencontainer');                
                 
@@ -151,11 +211,15 @@
                     thenumber = !isNaN(newvalues[0]) ? newvalues[0] : Infinity;
                     tick = newvalues[1];
                 });
+
                 $('#menubuttons .btn-main').each(function(index) {                    
                     $(this).on('click', function() {
                         handleMenuButtonClick(index);
                     });
                 });
+
+                $('#menubuttons .btn-hard').on('click', handleHardReset);
+                
 
                 $('#multiselect .btn-main').each(function(index) {                    
                     $(this).on('click', function() {
